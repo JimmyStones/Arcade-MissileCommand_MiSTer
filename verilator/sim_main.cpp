@@ -690,19 +690,19 @@ int main(int argc, char** argv, char** env) {
 		if (input.inputs[input_down]) { mouse_y -= acc; }
 		else if (mouse_y < 0) { mouse_y += (dec + (-mouse_y / fric)); }
 
-		int lim = 127;
+		int lim = 255;
 		if (mouse_x > lim) { mouse_x = lim; }
 		if (mouse_x < -lim) { mouse_x = -lim; }
 		if (mouse_y > lim) { mouse_y = lim; }
 		if (mouse_y < -lim) { mouse_y = -lim; }
 
-		signed char joy_x = mouse_x / 2;
-		signed char joy_y = mouse_y / 2;
+		//signed char joy_x = mouse_x / 2;
+		//signed char joy_y = mouse_y / 2;
 
-		unsigned short joy = ((unsigned char)-joy_y) << 8;
-		joy |= (unsigned char)joy_x;
+		//unsigned short joy = ((unsigned char)-joy_y) << 8;
+		//joy |= (unsigned char)joy_x;
 
-		top->joystick_analog = joy;
+		//top->joystick_analog = joy;
 
 		//}
 		//else {
@@ -716,57 +716,57 @@ int main(int argc, char** argv, char** env) {
 		//}
 
 
-		//unsigned char ps2_mouse1;
-		//unsigned char ps2_mouse2;
-		//int x = mouse_x;
-		//mouse_buttons |= (x < 0) ? 0x10 : 0x00;
-		//if (x < -255)
-		//{
-		//	// min possible value + overflow flag
-		//	mouse_buttons |= 0x40;
-		//	ps2_mouse1 = 1; // -255
-		//}
-		//else if (x > 255)
-		//{
-		//	// max possible value + overflow flag
-		//	mouse_buttons |= 0x40;
-		//	ps2_mouse1 = 255;
-		//}
-		//else
-		//{
-		//	ps2_mouse1 = (char)x;
-		//}
+		unsigned char ps2_mouse1;
+		unsigned char ps2_mouse2;
+		int x = mouse_x;
+		mouse_buttons |= (x < 0) ? 0x10 : 0x00;
+		if (x < -255)
+		{
+			// min possible value + overflow flag
+			mouse_buttons |= 0x40;
+			ps2_mouse1 = 1; // -255
+		}
+		else if (x > 255)
+		{
+			// max possible value + overflow flag
+			mouse_buttons |= 0x40;
+			ps2_mouse1 = 255;
+		}
+		else
+		{
+			ps2_mouse1 = (char)x;
+		}
 
-		//// ------ Y axis -----------
-		//// store sign bit in first byte
-		//int y = mouse_y;
-		//mouse_buttons |= (y < 0) ? 0x20 : 0x00;
-		//if (y < -255)
-		//{
-		//	// min possible value + overflow flag
-		//	mouse_buttons |= 0x80;
-		//	ps2_mouse2 = 1; // -255;
-		//}
-		//else if (y > 255)
-		//{
-		//	// max possible value + overflow flag
-		//	mouse_buttons |= 0x80;
-		//	ps2_mouse2 = 255;
-		//}
-		//else
-		//{
-		//	ps2_mouse2 = (char)y;
-		//}
+		// ------ Y axis -----------
+		// store sign bit in first byte
+		int y = mouse_y;
+		mouse_buttons |= (y < 0) ? 0x20 : 0x00;
+		if (y < -255)
+		{
+			// min possible value + overflow flag
+			mouse_buttons |= 0x80;
+			ps2_mouse2 = 1; // -255;
+		}
+		else if (y > 255)
+		{
+			// max possible value + overflow flag
+			mouse_buttons |= 0x80;
+			ps2_mouse2 = 255;
+		}
+		else
+		{
+			ps2_mouse2 = (char)y;
+		}
 
-		//unsigned long mouse_temp = mouse_buttons;
-		//mouse_temp += (((unsigned char)ps2_mouse1) << 8);
-		//mouse_temp += (((unsigned char)ps2_mouse2) << 16);
-		//if (mouse_clock) { mouse_temp |= (1UL << 24); }
+		unsigned long mouse_temp = mouse_buttons;
+		mouse_temp += (((unsigned char)ps2_mouse1) << 8);
+		mouse_temp += (((unsigned char)ps2_mouse2) << 16);
+		if (mouse_clock) { mouse_temp |= (1UL << 24); }
 
-		//mouse_clock = !mouse_clock;
+		mouse_clock = !mouse_clock;
 
-		//top->ps2_mouse = mouse_temp;
-		//top->ps2_mouse_ext = mouse_x + (mouse_buttons << 8);
+		top->ps2_mouse = mouse_temp;
+		top->ps2_mouse_ext = mouse_x + (mouse_buttons << 8);
 
 		// Run simulation
 		top->emu__DOT__missile__DOT__mp__DOT__bc6502__DOT__debug_cpu = debug_cpu & debug_enable;
